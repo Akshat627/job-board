@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import API from "../api";
 
 export default function Register() {
@@ -36,12 +36,11 @@ export default function Register() {
         role: form.role,
       });
 
-      console.log("REGISTER SUCCESS:", response.data);
+      console.log("Registration successful:", response.data);
 
-      alert("Registration successful! Please login.");
+      alert("Registration successful!");
 
       navigate("/login");
-
     } catch (error) {
       console.error(
         "REGISTER ERROR:",
@@ -61,11 +60,9 @@ export default function Register() {
     <div style={styles.container}>
       <div style={styles.card}>
         <h1>Create Account</h1>
-
         <p>Join JobNest today</p>
 
         <form onSubmit={handleSubmit}>
-
           <input
             type="text"
             name="name"
@@ -102,17 +99,12 @@ export default function Register() {
             onChange={handleChange}
             style={styles.input}
           >
-            <option value="candidate">
-              Candidate
-            </option>
-
-            <option value="employer">
-              Employer
-            </option>
+            <option value="candidate">Candidate</option>
+            <option value="employer">Employer</option>
           </select>
 
           {error && (
-            <div style={styles.error}>
+            <div style={{ color: "red", marginBottom: "15px" }}>
               {error}
             </div>
           )}
@@ -124,15 +116,7 @@ export default function Register() {
           >
             {loading ? "Registering..." : "Register"}
           </button>
-
         </form>
-
-        <p>
-          Already have an account?{" "}
-          <Link to="/login">
-            Login
-          </Link>
-        </p>
       </div>
     </div>
   );
@@ -176,9 +160,4 @@ const styles = {
     fontSize: "16px",
     cursor: "pointer",
   },
-
-  error: {
-    color: "red",
-    marginBottom: "15px",
-  },
-};
+};;
