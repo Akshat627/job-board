@@ -36,7 +36,7 @@ export default function Register() {
         role: form.role,
       });
 
-      console.log("Registration successful:", response.data);
+      console.log("REGISTER SUCCESS:", response.data);
 
       alert("Registration successful! Please login.");
 
@@ -44,7 +44,7 @@ export default function Register() {
 
     } catch (error) {
       console.error(
-        "REGISTRATION ERROR:",
+        "REGISTER ERROR:",
         error.response?.data || error.message
       );
 
@@ -122,18 +122,17 @@ export default function Register() {
             style={styles.button}
             disabled={loading}
           >
-            {loading ? "Creating account..." : "Register"}
+            {loading ? "Registering..." : "Register"}
           </button>
 
         </form>
 
-        <p style={{ marginTop: "20px" }}>
+        <p>
           Already have an account?{" "}
           <Link to="/login">
             Login
           </Link>
         </p>
-
       </div>
     </div>
   );
@@ -179,10 +178,7 @@ const styles = {
   },
 
   error: {
-    color: "#dc2626",
+    color: "red",
     marginBottom: "15px",
-    padding: "10px",
-    background: "#fee2e2",
-    borderRadius: "6px",
   },
 };
