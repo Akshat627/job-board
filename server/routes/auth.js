@@ -7,26 +7,27 @@ const User = require("../models/User");
 const router = express.Router();
 
 
-// ========================
 // REGISTER
-// ========================
-
 router.post("/register", async (req, res) => {
   try {
     console.log("REGISTER REQUEST:", req.body);
 
-    const name = req.body.name?.trim();
-    const email = req.body.email?.trim().toLowerCase();
-    const password = req.body.password;
-    const role = req.body.role;
+    const {
+      name,
+      email,
+      password,
+      role
+    } = req.body;
 
     if (!name || !email || !password) {
       return res.status(400).json({
-        message: "Name, email and password are required"
+        message: "All fields are required"
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    const existingUser = await User.findOne({
+      email
+    });
 
     if (existingUser) {
       return res.status(400).json({
@@ -39,7 +40,7 @@ router.post("/register", async (req, res) => {
       10
     );
 
-    const user = await User.create({
+    await User.create({
       name,
       email,
       password: hashedPassword,
@@ -49,54 +50,36 @@ router.post("/register", async (req, res) => {
           : "candidate"
     });
 
-    console.log(
-      "USER CREATED:",
-      user._id
-    );
+    console.log("USER CREATED:", email);
 
     return res.status(201).json({
       message: "Registration successful"
     });
 
   } catch (error) {
-
     console.error(
       "REGISTER ERROR:",
       error
     );
 
     return res.status(500).json({
-      message: error.message || "Server error"
+      message: error.message
     });
   }
 });
 
 
-// ========================
 // LOGIN
-// ========================
-
 router.post("/login", async (req, res) => {
   try {
+    const {
+      email,
+      password
+    } = req.body;
 
-    const email =
-      req.body.email?.trim().toLowerCase();
-
-    const password =
-      req.body.password;
-
-    console.log(
-      "LOGIN REQUEST:",
+    const user = await User.findOne({
       email
-    );
-
-    const user =
-      await User.findOne({ email });
-
-    console.log(
-      "USER FOUND:",
-      !!user
-    );
+    });
 
     if (!user) {
       return res.status(401).json({
@@ -104,15 +87,9 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const valid =
-      await bcrypt.compare(
-        password,
-        user.password
-      );
-
-    console.log(
-      "PASSWORD VALID:",
-      valid
+    const valid = await bcrypt.compare(
+      password,
+      user.password
     );
 
     if (!valid) {
@@ -121,19 +98,18 @@ router.post("/login", async (req, res) => {
       });
     }
 
-    const token =
-      jwt.sign(
-        {
-          id: user._id,
-          name: user.name,
-          email: user.email,
-          role: user.role
-        },
-        process.env.JWT_SECRET,
-        {
-          expiresIn: "7d"
-        }
-      );
+    const token = jwt.sign(
+      {
+        id: user._id,
+        name: user.name,
+        email: user.email,
+        role: user.role
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: "7d"
+      }
+    );
 
     return res.json({
       token,
@@ -145,16 +121,14 @@ router.post("/login", async (req, res) => {
       }
     });
 
-} catch (error) {
-  console.error("REGISTER ERROR:", error);
-
-  res.status(500).json({
-    message: error.message
-  });
-  }
+  } catch (error) {
+    console.error(
+      "LOGIN ERROR:",
+      error
+    );
 
     return res.status(500).json({
-      message: error.message || "Server error"
+      message: error.message
     });
   }
 });
