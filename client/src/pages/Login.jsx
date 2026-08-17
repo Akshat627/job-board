@@ -75,17 +75,19 @@ function Login() {
         );
 
       }
+} catch (error) {
 
-    } catch (error) {
+  console.error("LOGIN ERROR:", error);
+  console.error("STATUS:", error.response?.status);
+  console.error("DATA:", error.response?.data);
 
-      setError(
-        error.response?.data?.message ||
-        "Login failed"
-      );
+  setError(
+    error.response?.data?.message ||
+    error.message ||
+    "Login failed"
+  );
 
     }
-
-  }
 
 
   return (
