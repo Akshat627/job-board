@@ -1,11 +1,6 @@
 import axios from "axios";
 
-const API =
-  axios.create({
-    baseURL:
-      "http://localhost:5000/api"
-  });
-
+const API_URL = "https://job-board-p3jc.onrender.com";
 
 API.interceptors.request.use(
   config => {
