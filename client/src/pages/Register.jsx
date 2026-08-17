@@ -1,11 +1,19 @@
 import { useState } from "react";
+import { useNavigate, Link } from "react-router-dom";
+import API from "../api";
 
 export default function Register() {
+  const navigate = useNavigate();
+
   const [form, setForm] = useState({
     name: "",
     email: "",
     password: "",
+    role: "candidate",
   });
+
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     setForm({
@@ -14,18 +22,50 @@ export default function Register() {
     });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    alert("Registration submitted!");
+
+    setError("");
+    setLoading(true);
+
+    try {
+      const response = await API.post("/auth/register", {
+        name: form.name,
+        email: form.email,
+        password: form.password,
+        role: form.role,
+      });
+
+      console.log("Registration successful:", response.data);
+
+      alert("Registration successful! Please login.");
+
+      navigate("/login");
+
+    } catch (error) {
+      console.error(
+        "REGISTRATION ERROR:",
+        error.response?.data || error.message
+      );
+
+      setError(
+        error.response?.data?.message ||
+        "Registration failed"
+      );
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
     <div style={styles.container}>
       <div style={styles.card}>
         <h1>Create Account</h1>
+
         <p>Join JobNest today</p>
 
         <form onSubmit={handleSubmit}>
+
           <input
             type="text"
             name="name"
@@ -56,10 +96,44 @@ export default function Register() {
             style={styles.input}
           />
 
-          <button type="submit" style={styles.button}>
-            Register
+          <select
+            name="role"
+            value={form.role}
+            onChange={handleChange}
+            style={styles.input}
+          >
+            <option value="candidate">
+              Candidate
+            </option>
+
+            <option value="employer">
+              Employer
+            </option>
+          </select>
+
+          {error && (
+            <div style={styles.error}>
+              {error}
+            </div>
+          )}
+
+          <button
+            type="submit"
+            style={styles.button}
+            disabled={loading}
+          >
+            {loading ? "Creating account..." : "Register"}
           </button>
+
         </form>
+
+        <p style={{ marginTop: "20px" }}>
+          Already have an account?{" "}
+          <Link to="/login">
+            Login
+          </Link>
+        </p>
+
       </div>
     </div>
   );
@@ -74,6 +148,7 @@ const styles = {
     padding: "20px",
     background: "#f5f7fb",
   },
+
   card: {
     width: "100%",
     maxWidth: "420px",
@@ -82,6 +157,7 @@ const styles = {
     borderRadius: "12px",
     boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
   },
+
   input: {
     width: "100%",
     boxSizing: "border-box",
@@ -90,6 +166,7 @@ const styles = {
     border: "1px solid #ddd",
     borderRadius: "6px",
   },
+
   button: {
     width: "100%",
     padding: "12px",
@@ -99,5 +176,13 @@ const styles = {
     color: "white",
     fontSize: "16px",
     cursor: "pointer",
+  },
+
+  error: {
+    color: "#dc2626",
+    marginBottom: "15px",
+    padding: "10px",
+    background: "#fee2e2",
+    borderRadius: "6px",
   },
 };
