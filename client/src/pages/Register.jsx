@@ -38,7 +38,12 @@ export default function Register() {
 
       console.log("Registration successful:", response.data);
 
-      alert("Registration successful!");
+      await API.post("/auth/register", {
+  name: form.name,
+  email: form.email,
+  password: form.password,
+  role: form.role
+});
 
       navigate("/login");
     } catch (error) {
