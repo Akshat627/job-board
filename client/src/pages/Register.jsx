@@ -22,44 +22,34 @@ export default function Register() {
     });
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+ const handleSubmit = async (e) => {
+  e.preventDefault();
 
-    setError("");
-    setLoading(true);
+  setError("");
 
-    try {
-      const response = await API.post("/auth/register", {
-        name: form.name,
-        email: form.email,
-        password: form.password,
-        role: form.role,
-      });
+  try {
+    const response = await API.post("/auth/register", {
+      name: form.name,
+      email: form.email,
+      password: form.password,
+      role: form.role,
+    });
 
-      console.log("Registration successful:", response.data);
+    console.log("REGISTER SUCCESS:", response.data);
 
-      await API.post("/auth/register", {
-  name: form.name,
-  email: form.email,
-  password: form.password,
-  role: form.role
-});
+    alert("Registration successful!");
+  } catch (error) {
+    console.error("REGISTER ERROR:", error);
+    console.error("STATUS:", error.response?.status);
+    console.error("DATA:", error.response?.data);
 
-      navigate("/login");
-    } catch (error) {
-      console.error(
-        "REGISTER ERROR:",
-        error.response?.data || error.message
-      );
-
-      setError(
-        error.response?.data?.message ||
-        "Registration failed"
-      );
-    } finally {
-      setLoading(false);
-    }
-  };
+    setError(
+      error.response?.data?.message ||
+      error.message ||
+      "Registration failed"
+    );
+  }
+};
 
   return (
     <div style={styles.container}>
