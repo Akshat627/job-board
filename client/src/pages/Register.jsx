@@ -1,0 +1,103 @@
+import { useState } from "react";
+
+export default function Register() {
+  const [form, setForm] = useState({
+    name: "",
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    alert("Registration submitted!");
+  };
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.card}>
+        <h1>Create Account</h1>
+        <p>Join JobNest today</p>
+
+        <form onSubmit={handleSubmit}>
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={form.email}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+
+          <input
+            type="password"
+            name="password"
+            placeholder="Password"
+            value={form.password}
+            onChange={handleChange}
+            required
+            style={styles.input}
+          />
+
+          <button type="submit" style={styles.button}>
+            Register
+          </button>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+const styles = {
+  container: {
+    minHeight: "80vh",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    padding: "20px",
+    background: "#f5f7fb",
+  },
+  card: {
+    width: "100%",
+    maxWidth: "420px",
+    padding: "30px",
+    background: "white",
+    borderRadius: "12px",
+    boxShadow: "0 5px 20px rgba(0,0,0,0.1)",
+  },
+  input: {
+    width: "100%",
+    boxSizing: "border-box",
+    padding: "12px",
+    marginBottom: "15px",
+    border: "1px solid #ddd",
+    borderRadius: "6px",
+  },
+  button: {
+    width: "100%",
+    padding: "12px",
+    border: "none",
+    borderRadius: "6px",
+    background: "#2563eb",
+    color: "white",
+    fontSize: "16px",
+    cursor: "pointer",
+  },
+};
