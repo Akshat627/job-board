@@ -122,11 +122,7 @@ router.post("/login", async (req, res) => {
     });
 
   } catch (error) {
-    console.error(
-      "LOGIN ERROR:",
-      error
-    );
-
+   console.error("REGISTER ERROR:", error);
     return res.status(500).json({
       message: error.message
     });
